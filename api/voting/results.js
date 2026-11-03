@@ -1,6 +1,6 @@
 import { proxy } from '../_proxy.js';
 
-const API = 'https://api.creativeawards.et/api';
+import { API } from '../_config.js';
 
 export default (req, res) => {
   const id = req.query.category_id;
