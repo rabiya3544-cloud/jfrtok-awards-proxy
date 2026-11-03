@@ -1,0 +1,245 @@
+/* ---------- CategorySelect (custom dropdown) ---------- */
+.flex-1{
+flex: 25px 0 0;
+}
+span.lable{
+color:var(--dim);
+}
+.cat-select-trigger{
+  flex:1;min-width:0;
+  display:flex;align-items:center;gap:8px;
+  padding:6px 8px;
+  font:inherit;font-size:11px;font-weight:700;color:var(--text);
+  background:linear-gradient(180deg,#23232b,#181820);
+  border:1px solid var(--line);border-radius:8px;
+  box-shadow:var(--shadow-card);
+  cursor:pointer;text-align:left;
+  transition:transform .12s ease,box-shadow .12s ease,border-color .15s ease;
+}
+.cat-select-trigger:active{transform:translateY(1px);box-shadow:var(--shadow-press)}
+.cat-select-trigger[aria-expanded="true"]{border-color:var(--accent-2)}
+.cat-select-trigger:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+
+.cat-trigger-icon{
+  display:none;               /* Phase 3: shown when icon exists */
+  width:20px;height:20px;flex:none;
+  border-radius:4px;background:var(--panel-3);overflow:hidden;
+}
+.cat-trigger-icon img{width:100%;height:100%;object-fit:cover;display:block}
+
+.cat-trigger-label{
+  flex:1;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+.cat-trigger-caret{
+  width:12px;height:12px;flex:none;color:var(--muted);
+  transition:transform .15s ease;
+}
+.cat-select-trigger[aria-expanded="true"] .cat-trigger-caret{transform:rotate(180deg)}
+
+.cat-menu{
+  position:fixed;z-index:100;
+  background:#141419;
+  border:1px solid var(--line);
+  border-radius:10px;
+  box-shadow:var(--shadow-shell);
+  overflow:hidden;
+}
+
+.cat-menu-list{
+  max-height:320px;
+  overflow-y:auto;
+  padding:4px;
+}
+.cat-menu-list::-webkit-scrollbar{width:6px}
+.cat-menu-list::-webkit-scrollbar-thumb{background:#2a2a33;border-radius:999px}
+
+.cat-option{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;min-height:44px;
+  border-radius:6px;
+  font-size:12px;line-height:1.3;color:var(--text);
+  cursor:pointer;user-select:none;
+  transition:background .1s ease;
+}
+.cat-option.is-active{background:rgba(255,255,255,.04)}
+.cat-option.is-selected{background:rgba(255,176,32,.10);color:var(--accent-2)}
+.cat-option.is-selected.is-active{background:rgba(255,176,32,.16)}
+
+.cat-option-icon{
+  display:none;               /* Phase 3: shown when icon exists */
+  width:20px;height:20px;flex:none;
+  border-radius:4px;background:var(--panel-3);overflow:hidden;
+}
+.cat-option-icon img{width:100%;height:100%;object-fit:cover;display:block}
+
+.cat-option-label{
+  flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+.cat-option-check{
+  width:12px;height:12px;flex:none;color:var(--accent-2);
+  opacity:0;
+}
+.cat-option.is-selected .cat-option-check{opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  .cat-select-trigger,.cat-trigger-caret,.cat-option{transition:none}
+}
+
+
+.app-header{
+  flex:none;position:relative;z-index:3;display:flex;align-items:center;gap:9px;
+  padding:calc(10px + env(safe-area-inset-top)) 12px 10px;
+
+  /* Slightly brighter than the toolbar below, so it reads as "closer" */
+  background:linear-gradient(180deg,#1e1e26 0%,#15151b 55%,#0e0e12 100%);
+  border-bottom:1px solid #05050a;
+
+  /* Raised 3D — five layers, top to bottom of the visual stack */
+  box-shadow:
+    /* 1. Inner rim-light on top edge (sun from above) */
+    inset 0 1px 0 rgba(255,255,255,.14),
+    /* 2. Inner darkening on bottom edge (physical lip) */
+    inset 0 -1px 0 rgba(0,0,0,.85),
+    /* 3. First hard step — panel thickness (near) */
+    0 3px 0 -1px #06060a,
+    /* 4. Second hard step — deeper thickness (far) */
+    0 6px 0 -2px #030307,
+    /* 5. Ambient drop shadow — grounds it to the page */
+    0 14px 22px -12px rgba(0,0,0,.85),
+    0 22px 40px -18px rgba(0,0,0,.9);
+}
+
+.app-footer{
+  flex:none;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:7px 12px calc(7px + env(safe-area-inset-bottom));
+
+  font-size:10px;font-weight:600;color:var(--dim);
+  background:linear-gradient(0deg,#1e1e26 0%,#15151b 55%,#0e0e12 100%);
+  border-top:1px solid #05050a;
+
+  /* Raised 3D footer — light comes from below, thickness is above */
+  box-shadow:
+    /* 1. Inner rim-light on bottom edge (sun from below) */
+    inset 0 -1px 0 rgba(255,255,255,.14),
+    /* 2. Inner darkening on top edge (physical lip) */
+    inset 0 1px 0 rgba(0,0,0,.85),
+    /* 3. First hard step — panel thickness (near, upward) */
+    0 -3px 0 -1px #06060a,
+    /* 4. Second hard step — deeper thickness (far, upward) */
+    0 -6px 0 -2px #030307,
+    /* 5. Ambient drop shadow — grounds it to the page (upward) */
+    0 -14px 22px -12px rgba(0,0,0,.85),
+    0 -22px 40px -18px rgba(0,0,0,.9);
+
+  white-space:nowrap;overflow:hidden;
+  position:relative;z-index:3;
+}
+
+.criteria{
+background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
+  border-radius:8px;
+  
+}
+.chip{
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+
+  padding:3px 8px;
+  font-size:9.5px;
+  font-weight:600;
+  line-height:1.35;
+  color:var(--muted);
+  overflow-wrap:break-word;
+  word-break:break-word;    /* safety for very long unbroken words */
+  max-width:100%;           /* prevent overflow inside the flex parent */
+}
+.cat-info{
+padding:4px 5px;
+overflow:hidden;
+}
+.cat-info h2{
+margin:0 0 3px;
+font-size:13px;
+font-weight:800;
+border-bottom:1px solid var(--line);
+font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.cat-info .criteria {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cat-info .criteria-title {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.cat-info .criteria-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.list article.card:first-child{
+border-color:#1f5130;
+}
+.test.mismatch{ border-color:#5c1e1e; }
+.test.error{ border-color:#5c3a12; }
+
+/* ---------- .cat-info skeleton shapes ---------- */
+.cat-sk-title{
+  height:13px;
+  width:70%;
+  margin-bottom:6px;
+}
+
+.cat-sk-desc{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.cat-sk-line{height:9px}
+.cat-sk-line.w1{width:95%}
+.cat-sk-line.w2{width:60%}
+
+.cat-sk-crit-label{
+  height:8px;
+  width:48px;
+  margin-bottom:6px;
+}
+
+.cat-sk-chip{height:18px;border-radius:8px}
+.cat-sk-chip.w1{width:90px}
+.cat-sk-chip.w2{width:135px}
+.cat-sk-chip.w3{width:70px}
+
+/* ---------- .sponsor-strip skeleton shapes ---------- */
+.sp-chip-logo{
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  flex:none;
+}
+.sp-chip-label{
+  height:8px;
+  border-radius:4px;
+  flex:none;
+}
