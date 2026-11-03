@@ -364,24 +364,25 @@
     if (state.categoryId) catSelect.value = state.categoryId;
   }
   
+  
   async function loadCategory() {
     if (!state.categoryId) throw new Error('No category selected');
     const id = encodeURIComponent(state.categoryId);
     // Two raw calls in parallel, merged by the normalizer.
     const [rawCat, rawVotes] = await Promise.all([
       fetchJSON(`/api/categories/${id}`),
-      fetchJSON(`/api/votes?id=${id}`),
+      fetchJSON(`/api/voting/results?category_id=${id}`),
     ]);
     const normalized = N.category(rawCat, rawVotes, state.categoryId);
     state.category  = normalized.category;
     state.nominees  = normalized.nominees;
     state.sponsors  = normalized.sponsors;
   }
-
+  
   async function loadPackages() {
     if (!state.categoryId) return;
     try {
-      const raw = await fetchJSON(`/api/packages?category_id=${encodeURIComponent(state.categoryId)}`);
+      const raw = await fetchJSON(`/api/voting/packages/preview?category_id=${encodeURIComponent(state.categoryId)}`);
       state.packages = N.packages(raw);
     } catch { state.packages = []; }
   }
@@ -393,9 +394,10 @@
     } catch { state.allSponsors = []; }
   }
 
+
   async function loadFreeVoteDay() {
     try {
-      const raw = await fetchJSON('/api/free-vote-day');
+      const raw = await fetchJSON('/api/voting/free-vote-day');
       state.freeVote = N.freeVoteDay(raw);
     } catch { state.freeVote = { active: false, raw: null }; }
   }
@@ -431,7 +433,7 @@
     btn.classList.add('busy');
     const card = btn.closest('.card');
     try {
-      const raw = await fetchJSON(`/api/votes?id=${encodeURIComponent(state.categoryId)}`);
+      const raw = await fetchJSON(`/api/voting/results?category_id=${encodeURIComponent(state.categoryId)}`);
       const { byId } = N.voteMap(raw, state.categoryId);         // normalizer handles it
       const votes = byId[uuid];
       if (typeof votes !== 'number') throw new Error('No votes yet');
