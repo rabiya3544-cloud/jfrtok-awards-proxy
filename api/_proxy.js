@@ -19,7 +19,7 @@ export async function proxy(req, res, targetUrl, { cache = 's-maxage=120, stale-
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
   
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 10000);
+  const timer = setTimeout(() => ctrl.abort(), 13000);
   
   try {
     const r = await fetch(targetUrl, {
