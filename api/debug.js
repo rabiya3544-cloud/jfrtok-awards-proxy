@@ -26,7 +26,7 @@ function buildTargets(categoryId) {
       upstream: `${API}/categories/${cid}`,
       proxyPath: `/api/categories/${cid}`,
     },
-    'voting/results': {
+    votes: {
       upstream: `${API}/voting/results?category_id=${cid}`,
       proxyPath: `/api/voting/results?category_id=${cid}`,
     },
@@ -34,11 +34,11 @@ function buildTargets(categoryId) {
       upstream: `${API}/sponsors`,
       proxyPath: `/api/sponsors`,
     },
-    'voting/packages/preview': {
+    preview: {
       upstream: `${API}/voting/packages/preview?category_id=${cid}`,
       proxyPath: `/api/voting/packages/preview?category_id=${cid}`,
     },
-    'voting/free-vote-day': {
+    'free-vote-day': {
       upstream: `${API}/voting/free-vote-day`,
       proxyPath: `/api/voting/free-vote-day`,
     },
