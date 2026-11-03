@@ -34,12 +34,19 @@ export async function proxy(req, res, targetUrl, { cache = 's-maxage=120, stale-
     const body = await r.text();
     
     res.status(r.status);
-    res.setHeader(
-      'Content-Type',
-      r.headers.get('content-type') || 'application/json; charset=utf-8'
-    );
+res.setHeader(
+  'Content-Type',
+  r.headers.get('content-type') || 'application/json; charset=utf-8'
+);
     res.setHeader('Cache-Control', cache);
-    return res.send(body);
+    if (r.ok) {
+  res.setHeader('Cache-Control', cache);
+} else {
+  res.setHeader('Cache-Control', 'no-store');
+}
+
+return res.send(body);
+    
   } catch (err) {
     const message = err.name === 'AbortError' ? 'Upstream timed out' : err.message;
     return res.status(502).json({ error: message });
