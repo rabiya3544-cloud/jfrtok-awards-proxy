@@ -643,8 +643,9 @@
     };
   }
 
+
   async function testVotes() {
-    const raw = await getJSON(`/api/votes?id=${encodeURIComponent(DEFAULT_CATEGORY)}`);
+    const raw = await getJSON(`/api/voting/results?category_id=${encodeURIComponent(DEFAULT_CATEGORY)}`);
     let norm, err;
     try { norm = N.voteMap(raw, DEFAULT_CATEGORY); } catch (e) { err = e; }
     if (err) return { name: 'votes', checks: [ncheck('no throw', false, err.message)] };
@@ -675,7 +676,7 @@
     const id = DEFAULT_CATEGORY;
     const [rawCat, rawVotes] = await Promise.all([
       getJSON(`/api/category?id=${id}`),
-      getJSON(`/api/votes?id=${id}`),
+      getJSON(`/api/voting/results?category_id=${id}`),
     ]);
     let norm, err;
     try { norm = N.category(rawCat, rawVotes, id); } catch (e) { err = e; }
@@ -707,7 +708,7 @@
   }
 
   async function testPackages() {
-    const raw = await getJSON(`/api/packages?category_id=${encodeURIComponent(DEFAULT_CATEGORY)}`);
+    const raw = await getJSON(`/api/voting/packages/preview?category_id=${encodeURIComponent(DEFAULT_CATEGORY)}`);
     let norm, err;
     try { norm = N.packages(raw); } catch (e) { err = e; }
     if (err) return { name: 'packages', checks: [ncheck('no throw', false, err.message)] };
@@ -727,7 +728,7 @@
   }
 
   async function testFreeVoteDay() {
-    const raw = await getJSON('/api/free-vote-day');
+    const raw = await getJSON('/api/voting/free-vote-day');
     let norm, err;
     try { norm = N.freeVoteDay(raw); } catch (e) { err = e; }
     if (err) return { name: 'free-vote-day', checks: [ncheck('no throw', false, err.message)] };
