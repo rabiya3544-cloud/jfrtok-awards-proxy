@@ -2,12 +2,14 @@ import { proxy } from '../_proxy.js';
 
 const API = 'https://api.creativeawards.et/api';
 
-export default (req, res) => {
-  // single-bracket catch-all → req.query.id can be string OR array
-  const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
-  if (!id) return res.status(404).json({ error: 'Not found' });
-
-  return proxy(req, res, `${API}/categories/${encodeURIComponent(id)}`, {
-    cache: 's-maxage=120, stale-while-revalidate=600',
+export default async (req, res) => {
+  return res.status(200).json({
+    url: req.url,
+    query: req.query,
+    queryKeys: Object.keys(req.query),
+    headers: {
+      host: req.headers.host,
+      'x-forwarded-path': req.headers['x-forwarded-path'] || null,
+    },
   });
 };
