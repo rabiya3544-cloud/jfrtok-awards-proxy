@@ -363,13 +363,13 @@
     }
     if (state.categoryId) catSelect.value = state.categoryId;
   }
-
+  
   async function loadCategory() {
     if (!state.categoryId) throw new Error('No category selected');
     const id = encodeURIComponent(state.categoryId);
     // Two raw calls in parallel, merged by the normalizer.
     const [rawCat, rawVotes] = await Promise.all([
-      fetchJSON(`/api/category?id=${id}`),
+      fetchJSON(`/api/categories/${id}`),
       fetchJSON(`/api/votes?id=${id}`),
     ]);
     const normalized = N.category(rawCat, rawVotes, state.categoryId);
