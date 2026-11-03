@@ -38,6 +38,14 @@ function buildTargets(categoryId) {
       upstream: `${API}/voting/packages/preview?category_id=${cid}`,
       proxyPath: `/api/voting/packages/preview?category_id=${cid}`,
     },
+    'nominee-by-slug': {
+  upstream: `${API}/nominees/yasino-comedianyasino`,
+  proxyPath: `/api/nominees/yasino-comedianyasino`,
+},
+//nominees: {
+//  upstream: `${API}/nominees`,
+//  proxyPath: `/api/nominees`,
+//},
     'free-vote-day': {
       upstream: `${API}/voting/free-vote-day`,
       proxyPath: `/api/voting/free-vote-day`,
