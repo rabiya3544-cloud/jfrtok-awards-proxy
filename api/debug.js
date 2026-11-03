@@ -45,6 +45,9 @@ function buildTargets(categoryId) {
   };
 }
 
+// api/debug.js — replace the two fetch calls in probe()
+// and add cache-busting when probing the proxy side.
+
 async function probe(url, { timeout = 12000 } = {}) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeout);
@@ -58,6 +61,7 @@ async function probe(url, { timeout = 12000 } = {}) {
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
           '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
         'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
       },
     });
     const body = await r.text();
@@ -87,18 +91,19 @@ async function probe(url, { timeout = 12000 } = {}) {
   }
 }
 
+// And in testOne(), cache-bust the proxy probe:
 async function testOne(name, target, baseUrl) {
-  const proxyUrl = `${baseUrl}${target.proxyPath}`;
+  const sep = target.proxyPath.includes('?') ? '&' : '?';
+  const proxyUrl = `${baseUrl}${target.proxyPath}${sep}_t=${Date.now()}`;
   const [upstream, proxy] = await Promise.all([
     probe(target.upstream),
-    probe(proxyUrl),
+    probe(proxyUrl, { timeout: 14000 }),   // 4s more than the proxy's own 10s
   ]);
-  const match =
-    !!upstream.sha && !!proxy.sha && upstream.sha === proxy.sha;
+  const match = !!upstream.sha && !!proxy.sha && upstream.sha === proxy.sha;
   return {
     name,
     upstreamUrl: target.upstream,
-    proxyUrl: target.proxyPath,
+    proxyUrl: target.proxyPath,             // display clean (no _t)
     upstream,
     proxy,
     match,
@@ -106,6 +111,7 @@ async function testOne(name, target, baseUrl) {
     sizeMatch: upstream.bytes === proxy.bytes,
   };
 }
+
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
