@@ -8,6 +8,6 @@ export default (req, res) => {
     '';
   
   return proxy(req, res, `${API}/voting/results${qs}`, {
-    cache: 's-maxage=30, stale-while-revalidate=120',
+    cache: 'no-store',
   });
 };
