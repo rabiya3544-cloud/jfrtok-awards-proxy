@@ -3,13 +3,11 @@ import { proxy } from '../_proxy.js';
 import { API } from '../_config.js';
 
 export default (req, res) => {
-  const id = req.query.category_id;
-  if (!id) return res.status(400).json({ error: 'Missing ?category_id=' });
-
-  return proxy(
-    req,
-    res,
-    `${API}/voting/results?category_id=${encodeURIComponent(id)}`,
-    { cache: 's-maxage=30, stale-while-revalidate=120' }
-  );
+  const qs = req.query.category_id ?
+    `?category_id=${encodeURIComponent(req.query.category_id)}` :
+    '';
+  
+  return proxy(req, res, `${API}/voting/results${qs}`, {
+    cache: 's-maxage=30, stale-while-revalidate=120',
+  });
 };
